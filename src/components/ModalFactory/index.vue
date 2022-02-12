@@ -33,12 +33,14 @@ import {
 import useModal from '../../hooks/useModal';
 
 const ModalLogin = defineAsyncComponent(() => import('../ModalLogin/index.vue'));
+const ModalCreateAccount = defineAsyncComponent(() => import('../ModalCreateAccount/index.vue'));
 
 const DEFAULT_WIDTH = 'w-3/4 lg:w-1/3';
 
 export default {
   components: {
     ModalLogin,
+    ModalCreateAccount,
   },
 
   setup() {
