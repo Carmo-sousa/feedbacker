@@ -8,11 +8,11 @@
   </div>
 
   <div class="mt-16">
-    <form @submit.prevent="handlerLogin">
+    <form @submit.prevent="handlerSubmit">
       <label class="block">
         <span class="text-lg font-medium text-gray-800">E-mail</span>
         <input
-        v-bind="state.email.value"
+        v-model="state.email.value"
         type="email"
         :class="{
           'border-brand-danger': !!state.email.errorMessage
@@ -22,7 +22,7 @@
         placeholder="joe.jone@gmail.com"
         >
         <span
-        v-if="!state.email.errorMessage"
+        v-if="!!state.email.errorMessage"
         class="block font-medium text-brand-danger">
         {{ state.email.errorMessage }}</span>
       </label>
@@ -30,7 +30,7 @@
       <label class="block mt-10">
         <span class="text-lg font-medium text-gray-800">Senha</span>
         <input
-        v-bind="state.password.value"
+        v-model="state.password.value"
         type="password"
         :class="{
           'border-brand-danger': !!state.password.errorMessage
@@ -40,7 +40,7 @@
         placeholder="****"
         >
         <span
-        v-if="!state.password.errorMessage"
+        v-if="!!state.password.errorMessage"
         class="block font-medium text-brand-danger">
         {{ state.password.errorMessage }}</span>
       </label>
@@ -61,30 +61,43 @@
 <script>
 
 import { reactive } from 'vue';
+import { useField } from 'vee-validate';
 import useModal from '../../hooks/useModal';
+import { validateEmptyAndLength3, validateEmptyAndEmail } from '../../utils/validators';
 
 export default {
   setup() {
     const modal = useModal();
+
+    const {
+      value: emailValue,
+      errorMessage: emailErrorMessage,
+    } = useField('email', validateEmptyAndEmail);
+
+    const {
+      value: passwordValue,
+      errorMessage: passwordErrorMessage,
+    } = useField('password', validateEmptyAndLength3);
+
     const state = reactive({
       hasError: false,
       isLoading: false,
       email: {
-        value: '',
-        errorMessage: '',
+        value: emailValue,
+        errorMessage: emailErrorMessage,
       },
       password: {
-        value: '',
-        errorMessage: '',
+        value: passwordValue,
+        errorMessage: passwordErrorMessage,
       },
     });
 
-    function handlerLogin() {}
+    function handlerSubmit() {}
 
     return {
       state,
       close: modal.close,
-      handlerLogin,
+      handlerSubmit,
     };
   },
 };
